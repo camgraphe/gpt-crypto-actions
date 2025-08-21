@@ -3,13 +3,13 @@
   "info": {
     "title": "Binance 24h Ticker (public)",
     "version": "1.0.0",
-    "description": "Résumé 24h pour un symbole Spot (aucune authentification)."
+    "description": "Résumé 24h d’un symbole Spot (pas d’auth)."
   },
   "servers": [{ "url": "https://api.binance.com" }],
   "paths": {
     "/api/v3/ticker/24hr": {
       "get": {
-        "summary": "Résumé 24h d'un symbole",
+        "summary": "Résumé 24h d’un symbole",
         "operationId": "binance_ticker24h_get",
         "parameters": [
           {
@@ -17,7 +17,7 @@
             "in": "query",
             "required": true,
             "schema": { "type": "string", "example": "BTCUSDT" },
-            "description": "Symbole Spot, ex: BTCUSDT, ETHUSDT"
+            "description": "Symbole Spot, ex: BTCUSDT, ETHUSDT."
           }
         ],
         "responses": {
@@ -25,13 +25,37 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "additionalProperties": true }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "symbol": { "type": "string" },
+                    "priceChange": { "type": "string" },
+                    "priceChangePercent": { "type": "string" },
+                    "weightedAvgPrice": { "type": "string" },
+                    "prevClosePrice": { "type": "string" },
+                    "lastPrice": { "type": "string" },
+                    "lastQty": { "type": "string" },
+                    "bidPrice": { "type": "string" },
+                    "askPrice": { "type": "string" },
+                    "openPrice": { "type": "string" },
+                    "highPrice": { "type": "string" },
+                    "lowPrice": { "type": "string" },
+                    "volume": { "type": "string" },
+                    "quoteVolume": { "type": "string" },
+                    "openTime": { "type": "integer" },
+                    "closeTime": { "type": "integer" },
+                    "firstId": { "type": "integer" },
+                    "lastId": { "type": "integer" },
+                    "count": { "type": "integer" }
+                  },
+                  "required": ["symbol", "lastPrice"],
+                  "additionalProperties": true
+                }
               }
             }
           }
         }
       }
     }
-  },
-  "components": { "schemas": {} }
+  }
 }

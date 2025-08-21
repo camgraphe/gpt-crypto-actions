@@ -1,88 +1,60 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "CoinCap ASSETS API (public)",
+    "title": "CoinCap (public)",
     "version": "1.0.0",
-    "description": "Public CoinCap endpoints to list/filter assets (no API key)."
+    "description": "Public CoinCap endpoints for assets list, details and history (no API key)."
   },
-  "servers": [
-    { "url": "https://api.coincap.io" }
-  ],
+  "servers": [ { "url": "https://api.coincap.io" } ],
   "paths": {
     "/v2/assets": {
       "get": {
         "summary": "List/filter assets",
         "operationId": "coincap_assets_get",
         "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "schema": { "type": "string" },
-            "description": "Search by asset name/symbol (e.g., 'bitcoin', 'eth')."
-          },
-          {
-            "name": "ids",
-            "in": "query",
-            "schema": { "type": "string" },
-            "description": "Comma-separated CoinCap IDs (e.g., 'bitcoin,ethereum')."
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": { "type": "integer", "minimum": 1, "maximum": 200 },
-            "description": "Number of results (default by API is ~50)."
-          }
+          { "name": "search", "in": "query", "schema": { "type": "string" }, "description": "Search by name/symbol, e.g. 'bitcoin'" },
+          { "name": "limit",  "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 200 }, "description": "Max rows (default 50)" },
+          { "name": "offset", "in": "query", "schema": { "type": "integer", "minimum": 0 }, "description": "Pagination offset" }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": { "type": "object", "additionalProperties": true }
-                    },
-                    "timestamp": { "type": "integer" }
-                  },
-                  "required": ["data"]
-                }
-              }
-            }
+            "content": { "application/json": { "schema": { "type": "object", "additionalProperties": true } } }
           }
         }
       }
     },
     "/v2/assets/{id}": {
       "get": {
-        "summary": "Get single asset by id",
+        "summary": "Get one asset by id",
         "operationId": "coincap_asset_get",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" },
-            "description": "CoinCap asset id (lowercase), e.g., 'bitcoin', 'ethereum'."
-          }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "example": "bitcoin" }, "description": "Asset id, e.g. 'bitcoin'" }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": { "type": "object", "additionalProperties": true },
-                    "timestamp": { "type": "integer" }
-                  },
-                  "required": ["data"]
-                }
-              }
-            }
+            "content": { "application/json": { "schema": { "type": "object", "additionalProperties": true } } }
+          }
+        }
+      }
+    },
+    "/v2/assets/{id}/history": {
+      "get": {
+        "summary": "Historical prices for an asset id",
+        "operationId": "coincap_history_get",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "example": "bitcoin" } },
+          { "name": "interval", "in": "query",
+            "schema": { "type": "string", "enum": ["m1","m5","m15","m30","h1","h2","h6","h12","d1"], "default": "d1" },
+            "description": "Granularity (default d1)" },
+          { "name": "start", "in": "query", "schema": { "type": "string" }, "description": "ms since epoch (optional)" },
+          { "name": "end",   "in": "query", "schema": { "type": "string" }, "description": "ms since epoch (optional)" }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "type": "object", "additionalProperties": true } } }
           }
         }
       }

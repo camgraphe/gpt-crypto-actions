@@ -1,0 +1,56 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CoinCap Assets API (public)",
+    "version": "1.0.0",
+    "description": "Endpoints publics CoinCap pour lister/filtrer des actifs (sans clé)."
+  },
+  "servers": [{ "url": "https://api.coincap.io/v2" }],
+  "paths": {
+    "/assets": {
+      "get": {
+        "summary": "Lister/filtrer des actifs",
+        "operationId": "coincap_assets_get",
+        "parameters": [
+          { "name": "ids", "in": "query", "schema": { "type": "string" }, "description": "Ex: bitcoin,ethereum" },
+          { "name": "search", "in": "query", "schema": { "type": "string" }, "description": "Recherche par nom/ticker" },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 200 }, "description": "Taille de page (def. 100)" },
+          { "name": "offset", "in": "query", "schema": { "type": "integer", "minimum": 0 }, "description": "Décalage pagination" }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+                    "timestamp": { "type": "integer" }
+                  },
+                  "required": ["data"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assets/{id}": {
+      "get": {
+        "summary": "Détail d'un actif",
+        "operationId": "coincap_asset_get",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "Ex: bitcoin" }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "type": "object", "additionalProperties": true } } }
+          }
+        }
+      }
+    }
+  },
+  "components": { "schemas": {} }
+}

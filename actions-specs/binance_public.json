@@ -1,0 +1,71 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Binance Public (Price, 24h, Klines)",
+    "version": "1.0.0",
+    "description": "Public endpoints for spot prices, 24h stats and historical klines (no API key)."
+  },
+  "servers": [ { "url": "https://api.binance.com" } ],
+  "paths": {
+    "/api/v3/ticker/price": {
+      "get": {
+        "summary": "Simple price for a symbol",
+        "operationId": "binance_price_get",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "example": "BTCUSDT" },
+            "description": "Spot symbol, e.g. BTCUSDT"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "type": "object", "additionalProperties": true } } }
+          }
+        }
+      }
+    },
+    "/api/v3/ticker/24hr": {
+      "get": {
+        "summary": "24h stats for a symbol",
+        "operationId": "binance_ticker24h_get",
+        "parameters": [
+          { "name": "symbol", "in": "query", "required": true, "schema": { "type": "string", "example": "BTCUSDT" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "type": "object", "additionalProperties": true } } }
+          }
+        }
+      }
+    },
+    "/api/v3/klines": {
+      "get": {
+        "summary": "Historical candlesticks (klines)",
+        "operationId": "binance_klines_get",
+        "parameters": [
+          { "name": "symbol", "in": "query", "required": true, "schema": { "type": "string", "example": "BTCUSDT" } },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "example": "1h" },
+            "description": "m1,m5,m15,m30,1h,2h,4h,1d, etc."
+          },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 200, "minimum": 1, "maximum": 1000 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "type": "array", "items": { "type": "array" } } } }
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}

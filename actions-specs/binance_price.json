@@ -1,0 +1,44 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Binance Price (public)",
+    "version": "1.0.0",
+    "description": "Current spot price for a symbol (no auth)."
+  },
+  "servers": [ { "url": "https://api.binance.com" } ],
+  "paths": {
+    "/api/v3/ticker/price": {
+      "get": {
+        "summary": "Spot price for a symbol",
+        "operationId": "binance_price_get",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "example": "BTCUSDT" },
+            "description": "Trading pair in UPPERCASE (e.g., BTCUSDT, ETHUSDT)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "symbol": { "type": "string" },
+                    "price": { "type": "string" }
+                  },
+                  "required": ["symbol", "price"],
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

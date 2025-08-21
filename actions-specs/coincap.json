@@ -1,21 +1,37 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "CoinCap Assets API (public)",
+    "title": "CoinCap ASSETS API (public)",
     "version": "1.0.0",
-    "description": "Endpoints publics CoinCap pour lister/filtrer des actifs (sans clé)."
+    "description": "Public CoinCap endpoints to list/filter assets (no API key)."
   },
-  "servers": [{ "url": "https://api.coincap.io/v2" }],
+  "servers": [
+    { "url": "https://api.coincap.io" }
+  ],
   "paths": {
-    "/assets": {
+    "/v2/assets": {
       "get": {
-        "summary": "Lister/filtrer des actifs",
+        "summary": "List/filter assets",
         "operationId": "coincap_assets_get",
         "parameters": [
-          { "name": "ids", "in": "query", "schema": { "type": "string" }, "description": "Ex: bitcoin,ethereum" },
-          { "name": "search", "in": "query", "schema": { "type": "string" }, "description": "Recherche par nom/ticker" },
-          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 200 }, "description": "Taille de page (def. 100)" },
-          { "name": "offset", "in": "query", "schema": { "type": "integer", "minimum": 0 }, "description": "Décalage pagination" }
+          {
+            "name": "search",
+            "in": "query",
+            "schema": { "type": "string" },
+            "description": "Search by asset name/symbol (e.g., 'bitcoin', 'eth')."
+          },
+          {
+            "name": "ids",
+            "in": "query",
+            "schema": { "type": "string" },
+            "description": "Comma-separated CoinCap IDs (e.g., 'bitcoin,ethereum')."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 200 },
+            "description": "Number of results (default by API is ~50)."
+          }
         ],
         "responses": {
           "200": {
@@ -25,7 +41,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "data": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+                    "data": {
+                      "type": "array",
+                      "items": { "type": "object", "additionalProperties": true }
+                    },
                     "timestamp": { "type": "integer" }
                   },
                   "required": ["data"]
@@ -36,21 +55,37 @@
         }
       }
     },
-    "/assets/{id}": {
+    "/v2/assets/{id}": {
       "get": {
-        "summary": "Détail d'un actif",
+        "summary": "Get single asset by id",
         "operationId": "coincap_asset_get",
         "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "Ex: bitcoin" }
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "CoinCap asset id (lowercase), e.g., 'bitcoin', 'ethereum'."
+          }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": { "application/json": { "schema": { "type": "object", "additionalProperties": true } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "type": "object", "additionalProperties": true },
+                    "timestamp": { "type": "integer" }
+                  },
+                  "required": ["data"]
+                }
+              }
+            }
           }
         }
       }
     }
-  },
-  "components": { "schemas": {} }
+  }
 }
